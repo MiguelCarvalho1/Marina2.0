@@ -5,6 +5,8 @@ module com.miguel.marina2 {
     requires org.controlsfx.controls;
     requires org.mongodb.driver.sync.client;
     requires org.mongodb.bson;
+    requires spring.data.commons;
+    requires spring.data.mongodb;
 
     opens com.miguel.marina2 to javafx.fxml;
     exports com.miguel.marina2;

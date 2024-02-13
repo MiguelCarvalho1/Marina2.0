@@ -31,5 +31,6 @@ public class Main extends Application {
 
 
         launch();
+        Admin admin1 = new Admin(1, "Miguel" , "admin", "1234");
     }
 }
