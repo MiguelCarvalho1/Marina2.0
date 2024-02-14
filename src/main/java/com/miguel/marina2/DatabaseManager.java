@@ -21,55 +21,61 @@ public class DatabaseManager {
         collection = database.getCollection(COLLECTION_NAME);
     }
 
-    // Método para adicionar um documento ao banco de dados
+
     public void insertDocument(Document document) {
         collection.insertOne(document);
     }
 
-    // Método para buscar documentos no banco de dados
+
     public Document findDocument(String key, Object value) {
         return collection.find(new Document(key, value)).first();
     }
 
-    // Método para atualizar um documento no banco de dados
+
     public void updateDocument(String key, Object value, Document updatedDocument) {
         collection.updateOne(new Document(key, value), new Document("$set", updatedDocument));
     }
 
-    // Método para deletar um documento do banco de dados
+
     public void deleteDocument(String key, Object value) {
         collection.deleteOne(new Document(key, value));
     }
 
-   /* public void insertAnchorages(Anchorages anchorage, MongoCollection<Document> collection) {
-        Document doc = new Document("type", anchorage.getType())
-                .append("classLevel", anchorage.getClassLevel())
-                .append("length", anchorage.getLength())
-                .append("dailyPrice", anchorage.getDailyPrice())
-                .append("availableSpots", anchorage.getAvailableSpots());
-        collection.insertOne(doc);
+    public void insertAnchorages(List<Anchorages> anchoragesList) {
+        MongoCollection<Document> anchoragesCollection = database.getCollection("anchorages");
+        for (Anchorages anchorage : anchoragesList) {
+            Document document = new Document()
+                    .append("id", anchorage.getId())
+                    .append("pierType", anchorage.getPierType())
+                    .append("length", anchorage.getLength())
+                    .append("price", anchorage.getPrice())
+                    .append("places", anchorage.getPlaces());
+
+            anchoragesCollection.insertOne(document);
+        }
     }
 
-    public List<Anchorages> getAllAnchorages(MongoCollection<Document> collection) {
+    public List<Anchorages> getAllAnchorages() {
+        MongoCollection<Document> anchoragesCollection = database.getCollection("anchorages");
         List<Anchorages> anchoragesList = new ArrayList<>();
-        MongoCursor<Document> cursor = collection.find().iterator();
-        try {
+        FindIterable<Document> documents = anchoragesCollection.find();
+
+        try (MongoCursor<Document> cursor = documents.iterator()) {
             while (cursor.hasNext()) {
                 Document doc = cursor.next();
                 Anchorages anchorage = new Anchorages(
-                        doc.getString("type"),
-                        doc.getInteger("classLevel"),
+                        doc.getInteger("id"),
+                        doc.getString("pierType").charAt(0),
                         doc.getDouble("length"),
-                        doc.getDouble("dailyPrice"),
-                        doc.getInteger("availableSpots")
+                        doc.getDouble("price"),
+                        doc.getInteger("places")
                 );
                 anchoragesList.add(anchorage);
             }
-        } finally {
-            cursor.close();
         }
         return anchoragesList;
-    }*/
+    }
+
 
     public void insertAdmin(Admin admin) {
         MongoCollection<Document> adminCollection = database.getCollection("admins");

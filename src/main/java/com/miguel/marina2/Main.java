@@ -8,6 +8,8 @@ import javafx.stage.Stage;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main extends Application {
     @Override
@@ -33,8 +35,23 @@ public class Main extends Application {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             dbManager.close();
         }));
+
         Admin admin1 = new Admin(1, "Miguel" , "admin", "1234");
         dbManager.insertAdmin(admin1);
+
+        List<Anchorages> anchoragesList = new ArrayList<>();
+
+        anchoragesList.add(new Anchorages(1, 'A', 7.99, 10.40, 40));
+        anchoragesList.add( new Anchorages(2, 'B', 9.99, 15.50, 32));
+        anchoragesList.add(new Anchorages(3, 'C', 11.99, 19.50, 35));
+        anchoragesList.add( new Anchorages(4, 'D', 14.99, 25.60, 30));
+        anchoragesList.add( new Anchorages(5, 'E', 17.99, 50.50, 25));
+        anchoragesList.add( new Anchorages(6, 'F', 19.99, 62.80, 17));
+        anchoragesList.add( new Anchorages(7, 'G', Double.POSITIVE_INFINITY, 80.00, 7));
+
+        dbManager.insertAnchorages(anchoragesList);
+
+
         launch();
 
     }
