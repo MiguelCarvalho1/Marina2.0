@@ -28,9 +28,14 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        DatabaseManager dbManager = new DatabaseManager();
 
-
-        launch();
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            dbManager.close();
+        }));
         Admin admin1 = new Admin(1, "Miguel" , "admin", "1234");
+        dbManager.insertAdmin(admin1);
+        launch();
+
     }
 }

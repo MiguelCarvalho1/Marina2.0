@@ -8,7 +8,7 @@ import java.util.List;
 
 public class DatabaseManager {
 
-    private static final String DATABASE_NAME = "marina2.0";
+    private static final String DATABASE_NAME = "Marina2";
     private static final String COLLECTION_NAME = "vessels";
 
     private MongoClient mongoClient;
@@ -70,5 +70,23 @@ public class DatabaseManager {
         }
         return anchoragesList;
     }*/
+
+    public void insertAdmin(Admin admin) {
+        MongoCollection<Document> adminCollection = database.getCollection("admins");
+
+        Document adminDocument = new Document()
+                .append("id", admin.getId())
+                .append("name", admin.getName())
+                .append("username", admin.getUserName())
+                .append("password", admin.getPassword());
+
+        adminCollection.insertOne(adminDocument);
+    }
+
+    public void close() {
+        mongoClient.close();
+    }
+
+
 
 }
