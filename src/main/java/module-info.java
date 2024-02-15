@@ -6,9 +6,10 @@ module com.miguel.marina2 {
     requires org.mongodb.driver.sync.client;
     requires org.mongodb.bson;
     requires spring.data.commons;
-    requires spring.data.mongodb;
+   requires spring.data.mongodb;
     requires spring.context;
     requires spring.beans;
+    requires spring.boot.autoconfigure;
 
     opens com.miguel.marina2 to javafx.fxml;
     exports com.miguel.marina2;

@@ -5,12 +5,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@SpringBootApplication
 public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
@@ -36,7 +39,7 @@ public class Main extends Application {
             dbManager.close();
         }));
 
-        Admin admin1 = new Admin(1, "Miguel" , "admin", "1234");
+       /* Admin admin1 = new Admin(1, "Miguel" , "admin", "1234");
         dbManager.insertAdmin(admin1);
 
         List<Anchorages> anchoragesList = new ArrayList<>();
@@ -49,7 +52,7 @@ public class Main extends Application {
         anchoragesList.add( new Anchorages(6, 'F', 19.99, 62.80, 17));
         anchoragesList.add( new Anchorages(7, 'G', Double.POSITIVE_INFINITY, 80.00, 7));
 
-        dbManager.insertAnchorages(anchoragesList);
+        dbManager.insertAnchorages(anchoragesList);*/
 
 
         launch();

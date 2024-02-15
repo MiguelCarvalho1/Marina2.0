@@ -1,5 +1,6 @@
 package com.miguel.marina2;
 
+import com.miguel.marina2.utils.Constraints;
 import javafx.collections.FXCollections;
 
 import javafx.collections.ObservableList;
@@ -8,6 +9,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
+
+import javafx.scene.control.cell.PropertyValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -36,31 +39,36 @@ public class AnchoragesController implements Initializable {
 
     private DatabaseManager dbManager;
 
+    private ObservableList<Anchorages> obsList;
+
     public AnchoragesController() {
 
     }
 
+    public void setService(AnchoragesService service) {
+        this.service = service;
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        tableColumnTypeOfPier.setCellValueFactory(new PropertyValueFactory<>("typeOfPier"));
+        tableColumnCapacity.setCellValueFactory(new PropertyValueFactory<>("capacity"));
 
         updateListAnchorages();
 
     }
 
+
+
     private void updateListAnchorages() {
-        try {
-            // Recupera os dados do MongoDB usando o método getAllAnchorages()
-            List<Anchorages> anchoragesList = dbManager.getAllAnchorages();
-
-            // Converte a lista para uma ObservableList
-            ObservableList<Anchorages> observableList = FXCollections.observableArrayList(anchoragesList);
-
-            // Atualiza a TableView com os dados
-            tableViewAnchorages.setItems(observableList);
-        } catch (Exception e) {
-            System.err.println("Error updating the anchorage list: " + e.getMessage());
-            e.printStackTrace();
+        if(service == null){
+            throw new IllegalStateException("Service was null");
         }
+        List<Anchorages> list = service.findAll();
+        obsList = FXCollections.observableArrayList(list);
+        tableViewAnchorages.setItems(obsList);
+
+
     }
 
 
