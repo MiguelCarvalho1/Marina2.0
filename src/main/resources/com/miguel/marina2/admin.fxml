@@ -23,8 +23,9 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Clients">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Delete" />
+                        <MenuItem mnemonicParsing="false" text="Open Client List" onAction="#handleOpenClientList" />
                     </items>
+
                 </Menu>
                 <Menu mnemonicParsing="false" text="New Vessel">
                     <items>

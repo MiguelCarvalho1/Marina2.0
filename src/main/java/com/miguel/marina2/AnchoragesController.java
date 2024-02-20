@@ -4,18 +4,25 @@ import com.miguel.marina2.utils.Constraints;
 import javafx.collections.FXCollections;
 
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +45,10 @@ public class AnchoragesController implements Initializable {
 
     @FXML
     private TableColumn<Anchorages, String> tableColumnOccupation;
+
+    @FXML
+    private Button btClient;
+
 
 
     private static final Logger logger = LogManager.getLogger(AnchoragesController.class);
@@ -65,6 +76,19 @@ public class AnchoragesController implements Initializable {
        // updateListAnchorages();
 
     }
+
+    public void handleOpenClientList(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("clientlist.fxml"));
+            VBox root = loader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
 

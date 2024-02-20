@@ -14,6 +14,11 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 public class ClientFormController implements Initializable {
+
+    private Client entity;
+    private ClientService service;
+
+
     @FXML
     private TextField txtId;
     @FXML
@@ -34,6 +39,14 @@ public class ClientFormController implements Initializable {
     private Button btCancel;
 
     private ObservableList<Client> obsList;
+
+    public void seClient(Client entity) {
+        this.entity = entity;
+    }
+
+    public void setService(ClientService service) {
+        this.service = service;
+    }
 
     @FXML
     public void onBtSaveAction(ActionEvent event) {

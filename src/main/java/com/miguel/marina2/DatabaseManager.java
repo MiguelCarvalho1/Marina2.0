@@ -1,10 +1,21 @@
 package com.miguel.marina2;
 
 import com.mongodb.client.*;
+import com.mongodb.client.result.DeleteResult;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import org.bson.Document;
+import org.bson.conversions.Bson;
+import com.mongodb.client.result.UpdateResult;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.mongodb.client.model.Filters.eq;
 
 public class DatabaseManager {
 
@@ -81,6 +92,57 @@ public class DatabaseManager {
                 .append("password", admin.getPassword());
 
         adminCollection.insertOne(adminDocument);
+    }
+
+    //Client insert, update e remove
+
+    public void inserClient(Client client){
+        MongoCollection<Document> clientCollection = database.getCollection("client");
+
+        Document clientDocument = new Document()
+                .append("id", client.getId())
+                .append("name", client.getName())
+                .append("email", client.getEmail())
+                .append("phone", client.getPhone());
+        clientCollection.insertOne(clientDocument);
+    }
+
+    public void updateClient(Client client , Stage stage){
+        MongoCollection<Document> clientCollection = database.getCollection("client");
+
+        Bson filter = eq("id", client.getId());
+        Document updateDoc = new Document()
+                .append("name", client.getName())
+                .append("email", client.getEmail())
+                .append("phone", client.getPhone());
+
+        UpdateResult updateResult = clientCollection.updateOne(filter, new Document("$set", updateDoc));
+
+        if (updateResult.getModifiedCount() == 0) {
+
+            throw new RuntimeException("Cliente não encontrado para atualização");
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("clientForm.fxml"));
+           AnchorPane root = loader.load();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace(); // ou lidar com a exceção de forma apropriada
+        }
+    }
+
+    public void deleteClient(int clientId){
+        MongoCollection<Document> clientCollection = database.getCollection("client");
+
+        Bson filter = eq("id", clientId);
+
+        DeleteResult deleteResult = clientCollection.deleteOne(filter);
+
+        if (deleteResult.getDeletedCount() == 0) {
+
+            throw new RuntimeException("Cliente não encontrado para remoção");
+        }
     }
 
     public void close() {
