@@ -2,6 +2,7 @@ package com.miguel.marina2;
 
 import com.miguel.marina2.utils.Alerts;
 import com.miguel.marina2.utils.Utils;
+import com.mongodb.client.MongoCollection;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -10,16 +11,19 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.springframework.boot.autoconfigure.freemarker.FreeMarkerTemplateAvailabilityProvider;
+import org.bson.Document;
+
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
-public class ClientController implements Initializable {
+public class ClientController implements Initializable, DataChangeListener {
 
     @FXML
     private TableView<Client> tableViewClient;
@@ -39,7 +43,7 @@ public class ClientController implements Initializable {
     private Button btNew;
 
     private ObservableList<Client> obsList;
-    private DatabaseManager dbManger;
+    private DatabaseManager dbManager;
 
     @FXML
     public void onBtNewAction(ActionEvent event) {
@@ -55,10 +59,11 @@ public class ClientController implements Initializable {
     }
 
     public void updateTableView() {
+        List<Client> clients = dbManager.getAllClients();
+        tableViewClient.getItems().setAll(clients);
 
         initEditButtons();
         initRemoveButtons();
-
     }
 
     private void createDialogForm(Client obj, String absoluteName, Stage parentStage) {
@@ -67,7 +72,7 @@ public class ClientController implements Initializable {
             AnchorPane pane = loader.load();
 
             ClientFormController controller = loader.getController(); // Obtenha o controlador
-            controller.seClient(obj);
+            controller.setClient(obj);
             controller.setService(new ClientService());
             controller.updateFromData();
 
@@ -80,12 +85,23 @@ public class ClientController implements Initializable {
             dialogStage.showAndWait();
         }catch (IOException e){
             e.printStackTrace();
-            Alerts.showAlert("IOExcepion", "Error loading view", e.getMessage(), Alert.AlertType.ERROR);
+            Alerts.showAlert("IOException", "Error loading view", e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
 
     private void initializeNodes() {
+        tableColumnName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        tableColumnEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+        tableColumnPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
+
+        Stage stage = (Stage) Main.getMainScene().getWindow();
+        tableViewClient.prefHeightProperty().bind(stage.heightProperty());
+    }
+    @Override
+    public void onDataChanged() {
+
+        updateTableView();
     }
 
     private void initEditButtons() {
@@ -96,7 +112,7 @@ public class ClientController implements Initializable {
             {
                 button.setOnAction(event -> {
                     Client client = getTableView().getItems().get(getIndex());
-                    dbManger.updateClient(client, (Stage) button.getScene().getWindow());
+                    dbManager.updateClient(client, (Stage) button.getScene().getWindow());
                 });
             }
 
@@ -120,8 +136,7 @@ public class ClientController implements Initializable {
             {
                 button.setOnAction(event -> {
                     Client client = getTableView().getItems().get(getIndex());
-                    // Chamar o método de exclusão de cliente com o ID do cliente correspondente
-                    dbManger.deleteClient(client.getId());
+                    dbManager.deleteClient(client.getId());
                 });
             }
 

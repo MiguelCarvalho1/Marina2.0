@@ -18,6 +18,7 @@ import java.util.List;
 @Configuration
 @ComponentScan("com.miguel.marina2")
 public class Main extends Application {
+    private static Scene mainScene;
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("login.fxml"));
@@ -26,13 +27,17 @@ public class Main extends Application {
 
         LoginController loginController = loader.getController();
 
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
+        mainScene = new Scene(root);
+        stage.setScene(mainScene);
         stage.setTitle("Marina Software");
         stage.show();
 
 
 
+    }
+
+    public static Scene getMainScene(){
+        return mainScene;
     }
 
     public static void main(String[] args) {

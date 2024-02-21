@@ -96,15 +96,23 @@ public class DatabaseManager {
 
     //Client insert, update e remove
 
-    public void inserClient(Client client){
-        MongoCollection<Document> clientCollection = database.getCollection("client");
+    public void insertClient(Client client){
+        try {
+            MongoCollection<Document> clientCollection = database.getCollection("client");
 
-        Document clientDocument = new Document()
-                .append("id", client.getId())
-                .append("name", client.getName())
-                .append("email", client.getEmail())
-                .append("phone", client.getPhone());
-        clientCollection.insertOne(clientDocument);
+            Document clientDocument = new Document()
+                    .append("id", client.getId())
+                    .append("name", client.getName())
+                    .append("email", client.getEmail())
+                    .append("phone", client.getPhone());
+
+            clientCollection.insertOne(clientDocument);
+
+            System.out.println("Client inserted successfully.");
+        } catch (Exception e) {
+            System.out.println("Error inserting client: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public void updateClient(Client client , Stage stage){
@@ -150,5 +158,25 @@ public class DatabaseManager {
     }
 
 
+    public List<Client> getAllClients() {
+        List<Client> clients = new ArrayList<>();
+        MongoCollection<Document> clientCollection = database.getCollection("client");
 
-}
+        try (MongoCursor<Document> cursor = clientCollection.find().iterator()) {
+            while (cursor.hasNext()) {
+                Document doc = cursor.next();
+
+                Client client = new Client();
+                client.setId(doc.getInteger("id"));
+                client.setName(doc.getString("name"));
+                client.setEmail(doc.getString("email"));
+                client.setPhone(doc.getInteger("phone"));
+
+                clients.add(client);
+            }
+        }
+
+        return clients;
+    }
+    }
+
