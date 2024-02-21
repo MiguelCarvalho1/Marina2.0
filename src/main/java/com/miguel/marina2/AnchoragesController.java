@@ -15,6 +15,7 @@ import javafx.scene.control.TableView;
 
 
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
@@ -81,6 +82,29 @@ public class AnchoragesController implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("clientlist.fxml"));
             VBox root = loader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void handleOpenCountryForm(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("country.fxml"));
+            AnchorPane root = loader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void handleOpenClientForm(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("clientForm.fxml"));
+            AnchorPane root = loader.load();
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.show();

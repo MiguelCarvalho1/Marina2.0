@@ -178,5 +178,26 @@ public class DatabaseManager {
 
         return clients;
     }
+
+    //Country
+
+    public void insertCountry(Country country){
+        try {
+            MongoCollection<Document> countryCollection = database.getCollection("country");
+
+            Document countryDocument = new Document()
+                    .append("id", country.getId())
+                    .append("name", country.getName())
+                    .append("code", country.getCode());
+
+            countryCollection.insertOne(countryDocument);
+
+            System.out.println("Client inserted successfully.");
+        } catch (Exception e) {
+            System.out.println("Error inserting client: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     }
 

@@ -64,6 +64,8 @@ public class ClientFormController implements Initializable {
 
         this.dbManager = new DatabaseManager();
 
+        initializeNodes();
+
     }
 
     @FXML

@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
-@Document
+@Document(collection = "country")
 public class Country implements Serializable {
     @Id
     private Integer id;
