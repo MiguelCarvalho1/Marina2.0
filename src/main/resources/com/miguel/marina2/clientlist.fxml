@@ -23,14 +23,14 @@
               <Button fx:id="btNew" mnemonicParsing="false" onAction="#onBtNewAction" text="New" />
           </items>
        </ToolBar>
-       <TableView fx:id="tableViewClient" prefHeight="200.0" prefWidth="200.0">
-         <columns>
-             <TableColumn fx:id="tableColumnName" prefWidth="103.0" text="Name" />
-             <TableColumn fx:id="tableColumnEmail" prefWidth="197.0" text="Email" />
-             <TableColumn fx:id="tableColumnPhone" prefWidth="164.0" text="Phone" />
-            <TableColumn fx:id="tableColumnEDIT" minWidth="0.0" prefWidth="62.0" />
-            <TableColumn fx:id="tableColumnREMOVE" prefWidth="64.0" />
-         </columns>
+       <TableView fx:id="tableViewClient" prefHeight="324.0" prefWidth="600.0">
+           <columns>
+               <TableColumn fx:id="tableColumnName" prefWidth="103.0" text="Name" />
+               <TableColumn fx:id="tableColumnEmail" prefWidth="197.0" text="Email" />
+               <TableColumn fx:id="tableColumnPhone" prefWidth="164.0" text="Phone" />
+               <TableColumn fx:id="tableColumnEDIT" minWidth="0.0" prefWidth="62.0" />
+               <TableColumn fx:id="tableColumnREMOVE" prefWidth="64.0" />
+           </columns>
        </TableView>
    </children>
 </VBox>

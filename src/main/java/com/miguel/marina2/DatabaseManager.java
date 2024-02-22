@@ -2,8 +2,12 @@ package com.miguel.marina2;
 
 import com.mongodb.client.*;
 import com.mongodb.client.result.DeleteResult;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -26,10 +30,19 @@ public class DatabaseManager {
     private MongoDatabase database;
     private MongoCollection<Document> collection;
 
+    private ClientController clientController;
     public DatabaseManager() {
         mongoClient = MongoClients.create();
         database = mongoClient.getDatabase(DATABASE_NAME);
         collection = database.getCollection(COLLECTION_NAME);
+    }
+
+    public MongoDatabase getDatabase() {
+        if (database == null) {
+            // Substitua "nome_do_seu_banco_de_dados" pelo nome do seu banco de dados MongoDB
+            database = mongoClient.getDatabase("Marina2");
+        }
+        return database;
     }
 
     // Método para adicionar um documento ao banco de dados
@@ -96,6 +109,11 @@ public class DatabaseManager {
 
     //Client insert, update e remove
 
+
+    public void setClientController(ClientController clientController) {
+        this.clientController = clientController;
+    }
+
     public void insertClient(Client client){
         try {
             MongoCollection<Document> clientCollection = database.getCollection("client");
@@ -153,32 +171,6 @@ public class DatabaseManager {
         }
     }
 
-    public void close() {
-        mongoClient.close();
-    }
-
-
-    public List<Client> getAllClients() {
-        List<Client> clients = new ArrayList<>();
-        MongoCollection<Document> clientCollection = database.getCollection("client");
-
-        try (MongoCursor<Document> cursor = clientCollection.find().iterator()) {
-            while (cursor.hasNext()) {
-                Document doc = cursor.next();
-
-                Client client = new Client();
-                client.setId(doc.getInteger("id"));
-                client.setName(doc.getString("name"));
-                client.setEmail(doc.getString("email"));
-                client.setPhone(doc.getInteger("phone"));
-
-                clients.add(client);
-            }
-        }
-
-        return clients;
-    }
-
     //Country
 
     public void insertCountry(Country country){
@@ -197,6 +189,10 @@ public class DatabaseManager {
             System.out.println("Error inserting client: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    public void close() {
+        mongoClient.close();
     }
 
     }

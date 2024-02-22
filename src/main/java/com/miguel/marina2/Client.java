@@ -25,6 +25,12 @@ public class Client implements Serializable {
         this.phone = phone;
     }
 
+    public Client(String name, String email, Integer phone) {
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+    }
+
     public Integer getId() {
         return id;
     }

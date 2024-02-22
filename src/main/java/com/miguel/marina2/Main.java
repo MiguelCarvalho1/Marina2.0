@@ -19,6 +19,7 @@ import java.util.List;
 @ComponentScan("com.miguel.marina2")
 public class Main extends Application {
     private static Scene mainScene;
+
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("login.fxml"));
@@ -61,6 +62,8 @@ public class Main extends Application {
         anchoragesList.add( new Anchorages(7, 'G', Double.POSITIVE_INFINITY, 80.00, 7));
 
         dbManager.insertAnchorages(anchoragesList);*/
+
+
 
 
         launch();
