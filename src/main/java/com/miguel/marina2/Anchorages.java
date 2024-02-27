@@ -29,6 +29,12 @@ public class Anchorages implements Serializable {
         this.places = places;
     }
 
+    public Anchorages(Character pierType, Integer places) {
+        this.pierType = pierType;
+        this.places = places;
+    }
+
+
     public Integer getId() {
         return id;
     }

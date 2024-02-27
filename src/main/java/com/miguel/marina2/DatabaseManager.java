@@ -1,10 +1,25 @@
 package com.miguel.marina2;
 
 import com.mongodb.client.*;
+import com.mongodb.client.result.DeleteResult;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import org.bson.Document;
+import org.bson.conversions.Bson;
+import com.mongodb.client.result.UpdateResult;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.mongodb.client.model.Filters.eq;
 
 public class DatabaseManager {
 
@@ -15,10 +30,19 @@ public class DatabaseManager {
     private MongoDatabase database;
     private MongoCollection<Document> collection;
 
+    private ClientController clientController;
     public DatabaseManager() {
         mongoClient = MongoClients.create();
         database = mongoClient.getDatabase(DATABASE_NAME);
         collection = database.getCollection(COLLECTION_NAME);
+    }
+
+    public MongoDatabase getDatabase() {
+        if (database == null) {
+            // Substitua "nome_do_seu_banco_de_dados" pelo nome do seu banco de dados MongoDB
+            database = mongoClient.getDatabase("Marina2");
+        }
+        return database;
     }
 
 
@@ -89,10 +113,93 @@ public class DatabaseManager {
         adminCollection.insertOne(adminDocument);
     }
 
+    //Client insert, update e remove
+
+
+    public void setClientController(ClientController clientController) {
+        this.clientController = clientController;
+    }
+
+    public void insertClient(Client client){
+        try {
+            MongoCollection<Document> clientCollection = database.getCollection("client");
+
+            Document clientDocument = new Document()
+                    .append("id", client.getId())
+                    .append("name", client.getName())
+                    .append("email", client.getEmail())
+                    .append("phone", client.getPhone());
+
+            clientCollection.insertOne(clientDocument);
+
+            System.out.println("Client inserted successfully.");
+        } catch (Exception e) {
+            System.out.println("Error inserting client: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void updateClient(Client client , Stage stage){
+        MongoCollection<Document> clientCollection = database.getCollection("client");
+
+        Bson filter = eq("id", client.getId());
+        Document updateDoc = new Document()
+                .append("name", client.getName())
+                .append("email", client.getEmail())
+                .append("phone", client.getPhone());
+
+        UpdateResult updateResult = clientCollection.updateOne(filter, new Document("$set", updateDoc));
+
+        if (updateResult.getModifiedCount() == 0) {
+
+            throw new RuntimeException("Cliente não encontrado para atualização");
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("clientForm.fxml"));
+           AnchorPane root = loader.load();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace(); // ou lidar com a exceção de forma apropriada
+        }
+    }
+
+    public void deleteClient(int clientId){
+        MongoCollection<Document> clientCollection = database.getCollection("client");
+
+        Bson filter = eq("id", clientId);
+
+        DeleteResult deleteResult = clientCollection.deleteOne(filter);
+
+        if (deleteResult.getDeletedCount() == 0) {
+
+            throw new RuntimeException("Cliente não encontrado para remoção");
+        }
+    }
+
+    //Country
+
+    public void insertCountry(Country country){
+        try {
+            MongoCollection<Document> countryCollection = database.getCollection("country");
+
+            Document countryDocument = new Document()
+                    .append("id", country.getId())
+                    .append("name", country.getName())
+                    .append("code", country.getCode());
+
+            countryCollection.insertOne(countryDocument);
+
+            System.out.println("Client inserted successfully.");
+        } catch (Exception e) {
+            System.out.println("Error inserting client: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     public void close() {
         mongoClient.close();
     }
 
+    }
 
-
-}
