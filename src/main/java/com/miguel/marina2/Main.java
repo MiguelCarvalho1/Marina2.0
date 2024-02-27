@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
 import org.springframework.context.annotation.Configuration;
 
 
@@ -17,6 +18,7 @@ import java.util.List;
 
 @Configuration
 @ComponentScan("com.miguel.marina2")
+
 public class Main extends Application {
     private static Scene mainScene;
 
@@ -62,8 +64,6 @@ public class Main extends Application {
         anchoragesList.add( new Anchorages(7, 'G', Double.POSITIVE_INFINITY, 80.00, 7));
 
         dbManager.insertAnchorages(anchoragesList);*/
-
-
 
 
         launch();

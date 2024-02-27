@@ -34,6 +34,7 @@ public class Anchorages implements Serializable {
         this.places = places;
     }
 
+
     public Integer getId() {
         return id;
     }
