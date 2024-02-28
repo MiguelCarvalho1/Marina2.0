@@ -191,6 +191,37 @@ public class DatabaseManager {
         }
     }
 
+
+    //Vessel
+
+    public void insertVessel(Vessel vessel){
+        try {
+            MongoCollection<Document> vesselCollection = database.getCollection("vessels");
+
+            String pierType = String.valueOf(vessel.getPierType());
+
+            String clientId= String.valueOf(vessel.getClientId());
+
+            Document vesselDocument = new Document()
+                    .append("registration", vessel.getRegistration())
+                    .append("capitanName", vessel.getCapitanName())
+                    .append("numPassanger", vessel.getNumPassenger())
+                    .append("entryDate", vessel.getEntryDate())
+                    .append("pierType", pierType)
+                    .append("exitDate", vessel.getExitDate())
+                    .append("numberDayStay", vessel.getNumberDaysStay())
+                    .append("amountPaid", vessel.getAmountPaid())
+                    .append("amountPayable", vessel.getAmountPayable())
+                    .append("clientId", clientId);
+
+            vesselCollection.insertOne(vesselDocument);
+
+        }catch (Exception e) {
+            System.out.println("Error inserting Vessel: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     public void close() {
         mongoClient.close();
     }
