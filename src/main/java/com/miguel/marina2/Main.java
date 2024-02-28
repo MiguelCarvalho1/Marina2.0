@@ -7,14 +7,19 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Configuration;
 
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@SpringBootApplication
+
+@Configuration
+@ComponentScan("com.miguel.marina2")
 public class Main extends Application {
+    private static Scene mainScene;
+
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("login.fxml"));
@@ -23,13 +28,17 @@ public class Main extends Application {
 
         LoginController loginController = loader.getController();
 
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
+        mainScene = new Scene(root);
+        stage.setScene(mainScene);
         stage.setTitle("Marina Software");
         stage.show();
 
 
 
+    }
+
+    public static Scene getMainScene(){
+        return mainScene;
     }
 
     public static void main(String[] args) {
@@ -53,6 +62,8 @@ public class Main extends Application {
         anchoragesList.add( new Anchorages(7, 'G', Double.POSITIVE_INFINITY, 80.00, 7));
 
         dbManager.insertAnchorages(anchoragesList);*/
+
+
 
 
         launch();
