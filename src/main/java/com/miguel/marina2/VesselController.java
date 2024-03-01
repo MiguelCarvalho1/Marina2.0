@@ -37,8 +37,6 @@ public class VesselController implements Initializable {
     @FXML
     private TableColumn<Vessel, Vessel> tableColumnREMOVE;
 
-    @FXML
-    private TextField txtRegistration;
 
     @FXML
     private Button btNew;
@@ -94,29 +92,4 @@ public class VesselController implements Initializable {
     private void initEditButtons() {
     }
 
-   /* @FXML
-    public void onSearchByRegistration(ActionEvent event) {
-        String registration = txtRegistration.getText();
-
-        try {
-            Vessel result = vesselService.findByRegistration(registration);
-
-            ObservableList<Vessel> singleItemList = FXCollections.observableArrayList(result);
-            tableViewVessel.setItems(singleItemList);
-
-            txtRegistration.clear();
-        } catch (ObjectNotFoundException e) {
-
-            if (e.getMessage().equals("Registo não encontrado")) {
-                System.err.println("Registo não encontrado: " + registration);
-
-            } else {
-
-                e.printStackTrace();
-            }
-        } catch (Exception e) {
-
-            e.printStackTrace();
-        }
-    }*/
 }
