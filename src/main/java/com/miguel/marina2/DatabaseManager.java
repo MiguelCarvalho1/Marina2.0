@@ -202,6 +202,8 @@ public class DatabaseManager {
 
             String clientId= String.valueOf(vessel.getClientId());
 
+            String countryId = String.valueOf(vessel.getCountryId());
+
             Document vesselDocument = new Document()
                     .append("registration", vessel.getRegistration())
                     .append("capitanName", vessel.getCapitanName())
@@ -210,8 +212,7 @@ public class DatabaseManager {
                     .append("pierType", pierType)
                     .append("exitDate", vessel.getExitDate())
                     .append("numberDayStay", vessel.getNumberDaysStay())
-                    .append("amountPaid", vessel.getAmountPaid())
-                    .append("amountPayable", vessel.getAmountPayable())
+                    .append("countryId", countryId)
                     .append("clientId", clientId);
 
             vesselCollection.insertOne(vesselDocument);

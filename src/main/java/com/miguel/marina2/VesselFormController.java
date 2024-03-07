@@ -31,6 +31,10 @@ public class VesselFormController implements Initializable {
     @FXML
     private ComboBox comboBoxCountry;
     @FXML
+    private DatePicker entryDate;
+    @FXML
+    private DatePicker exitDate;
+    @FXML
     private ComboBox comboBoxAnchorages;
     @FXML
     private Label labelErrorRegistration;
@@ -38,6 +42,16 @@ public class VesselFormController implements Initializable {
     private Label labelErrorCapitanName;
     @FXML
     private Label labelErrorNumPassenger;
+    @FXML
+    private Label labelErrorClient;
+    @FXML
+    private Label labelErrorCountry;
+    @FXML
+    private Label labelErrorAnchorages;
+    @FXML
+    private Label labelErrorEntryDate;
+    @FXML
+    private Label labelErrorExitDate;
     @FXML
     private Button btSave;
     @FXML

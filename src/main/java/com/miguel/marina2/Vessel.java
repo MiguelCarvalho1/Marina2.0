@@ -21,12 +21,14 @@ public class Vessel {
 
     private String clientId;
 
+    private String countryId;
+
 
 
     public Vessel() {
     }
 
-    public Vessel(String registration, String capitanName, Integer numPassenger, LocalDate entryDate, String pierType, LocalDate exitDate, Integer numberDaysStay, Double amountPaid, Double amountPayable, String clientId) {
+    public Vessel(String registration, String capitanName, Integer numPassenger, LocalDate entryDate, String pierType, LocalDate exitDate, Integer numberDaysStay, Double amountPaid, Double amountPayable, String clientId, String countryId) {
         this.registration = registration;
         this.capitanName = capitanName;
         this.numPassenger = numPassenger;
@@ -37,6 +39,7 @@ public class Vessel {
         this.amountPaid = amountPaid;
         this.amountPayable = amountPayable;
         this.clientId = clientId;
+        this.countryId = countryId;
     }
 
     public String getRegistration() {
@@ -117,6 +120,14 @@ public class Vessel {
 
     public void setClientId(String clientId) {
         this.clientId = clientId;
+    }
+
+    public String getCountryId() {
+        return countryId;
+    }
+
+    public void setCountryId(String countryId) {
+        this.countryId = countryId;
     }
 
     @Override
