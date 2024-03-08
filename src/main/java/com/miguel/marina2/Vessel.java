@@ -13,22 +13,22 @@ public class Vessel {
     private String capitanName;
     private Integer numPassenger;
     private LocalDate entryDate;
-    private String pierType;
+    private char pierType;
     private LocalDate exitDate;
     private Integer numberDaysStay;
     private Double amountPaid;
     private Double amountPayable;
 
-    private String clientId;
+    private Client clientId;
 
-    private String countryId;
+    private Country countryId;
 
 
 
     public Vessel() {
     }
 
-    public Vessel(String registration, String capitanName, Integer numPassenger, LocalDate entryDate, String pierType, LocalDate exitDate, Integer numberDaysStay, Double amountPaid, Double amountPayable, String clientId, String countryId) {
+    public Vessel(String registration, String capitanName, Integer numPassenger, LocalDate entryDate, char pierType, LocalDate exitDate, Integer numberDaysStay, Double amountPaid, Double amountPayable, Client clientId, Country countryId) {
         this.registration = registration;
         this.capitanName = capitanName;
         this.numPassenger = numPassenger;
@@ -74,11 +74,11 @@ public class Vessel {
         this.entryDate = entryDate;
     }
 
-    public String getPierType() {
+    public char getPierType() {
         return pierType;
     }
 
-    public void setPierType(String pierType) {
+    public void setPierType(char pierType) {
         this.pierType = pierType;
     }
 
@@ -114,19 +114,19 @@ public class Vessel {
         this.amountPayable = amountPayable;
     }
 
-    public String getClientId() {
+    public Client getClientId() {
         return clientId;
     }
 
-    public void setClientId(String clientId) {
+    public void setClientId(Client clientId) {
         this.clientId = clientId;
     }
 
-    public String getCountryId() {
+    public Country getCountryId() {
         return countryId;
     }
 
-    public void setCountryId(String countryId) {
+    public void setCountryId(Country countryId) {
         this.countryId = countryId;
     }
 
