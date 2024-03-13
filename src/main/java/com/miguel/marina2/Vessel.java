@@ -4,6 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Objects;
 
 @Document(collection = "vessels")
@@ -12,9 +13,9 @@ public class Vessel {
     private String registration;
     private String capitanName;
     private Integer numPassenger;
-    private LocalDate entryDate;
-    private char pierType;
-    private LocalDate exitDate;
+    private Date entryDate;
+    private Anchorages pierType;
+    private Date exitDate;
     private Integer numberDaysStay;
     private Double amountPaid;
     private Double amountPayable;
@@ -28,7 +29,7 @@ public class Vessel {
     public Vessel() {
     }
 
-    public Vessel(String registration, String capitanName, Integer numPassenger, LocalDate entryDate, char pierType, LocalDate exitDate, Integer numberDaysStay, Double amountPaid, Double amountPayable, Client clientId, Country countryId) {
+    public Vessel(String registration, String capitanName, Integer numPassenger, Date entryDate, Anchorages pierType, Date exitDate, Integer numberDaysStay, Double amountPaid, Double amountPayable, Client clientId, Country countryId) {
         this.registration = registration;
         this.capitanName = capitanName;
         this.numPassenger = numPassenger;
@@ -66,27 +67,27 @@ public class Vessel {
         this.numPassenger = numPassenger;
     }
 
-    public LocalDate getEntryDate() {
+    public Date getEntryDate() {
         return entryDate;
     }
 
-    public void setEntryDate(LocalDate entryDate) {
+    public void setEntryDate(Date entryDate) {
         this.entryDate = entryDate;
     }
 
-    public char getPierType() {
+    public Anchorages getPierType() {
         return pierType;
     }
 
-    public void setPierType(char pierType) {
+    public void setPierType(Anchorages pierType) {
         this.pierType = pierType;
     }
 
-    public LocalDate getExitDate() {
+    public Date getExitDate() {
         return exitDate;
     }
 
-    public void setExitDate(LocalDate exitDate) {
+    public void setExitDate(Date exitDate) {
         this.exitDate = exitDate;
     }
 
