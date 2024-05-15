@@ -223,6 +223,19 @@ public class DatabaseManager {
         }
     }
 
+    public void deleteVessel(String registration) {
+        MongoCollection<Document> clientCollection = database.getCollection("vessel");
+
+        Bson filter = eq("registration", registration);
+
+        DeleteResult deleteResult = clientCollection.deleteOne(filter);
+
+        if (deleteResult.getDeletedCount() == 0) {
+
+            throw new RuntimeException("Vessel don´t found");
+        }
+    }
+
     public void close() {
         mongoClient.close();
     }
