@@ -1,4 +1,4 @@
-### Gestão da Marina de Viana do Castelo - Projeto em Java
+### Gestão da Marina  - Projeto em Java, MongoDB, JavaFX
 
 Este é um projeto em Java que simula a gestão da Marina de Viana do Castelo, utilizando JavaFX para a interface gráfica e MongoDB para o armazenamento de dados.
 
