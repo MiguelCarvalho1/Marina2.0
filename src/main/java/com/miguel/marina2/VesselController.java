@@ -23,7 +23,17 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class VesselController implements Initializable, DataChangeListener {
+
+    private static final String ERROR_LOADING_VIEW = "Error loading view";
+    private static final String ERROR_VESSEL_NULL = "Vessel was null";
+    private static final String FXML_VESSEL_FORM = "vesselForm.fxml";
+    private static final String IO_EXCEPTION = "IOException";
+
     private VesselService vesselService;
+    private DatabaseManager dbManager = new DatabaseManager();
+    private ObservableList<Vessel> obsList;
+    private List<DataChangeListener> dataChangeListeners = new ArrayList<>();
+
     @FXML
     private TableView<Vessel> tableViewVessel;
     @FXML
@@ -36,30 +46,94 @@ public class VesselController implements Initializable, DataChangeListener {
     private TableColumn<Country, String> tableColumnCountry;
     @FXML
     private TableColumn<Vessel, Integer> tableColumnNumPassenger;
-
     @FXML
     private TableColumn<Vessel, Vessel> tableColumnEDIT;
-
     @FXML
     private TableColumn<Vessel, Vessel> tableColumnREMOVE;
-
-    private DatabaseManager dbManager = new DatabaseManager();
-
-
     @FXML
     private Button btNew;
 
-    private ObservableList<Vessel> obsList;
+    public void setVesselService(VesselService vesselService) {
+        this.vesselService = vesselService;
+    }
 
-    private List<DataChangeListener> dataChangeListeners = new ArrayList<>();
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        initializeNodes();
+        updateTableView();
+    }
+
+    private void initializeNodes() {
+        tableColumnRegistration.setCellValueFactory(new PropertyValueFactory<>("registration"));
+        tableColumnNameCapitan.setCellValueFactory(new PropertyValueFactory<>("capitanName"));
+        tableColumnClient.setCellValueFactory(new PropertyValueFactory<>("client.name"));
+        tableColumnCountry.setCellValueFactory(new PropertyValueFactory<>("country.name"));
+        tableColumnNumPassenger.setCellValueFactory(new PropertyValueFactory<>("numPassenger"));
+
+        Stage stage = (Stage) Main.getMainScene().getWindow();
+        tableViewVessel.prefHeightProperty().bind(stage.heightProperty());
+    }
+
+    public void updateTableView() {
+        if (vesselService == null) {
+            throw new IllegalStateException(ERROR_VESSEL_NULL);
+        }
+        List<Vessel> list = vesselService.findAll();
+        obsList = FXCollections.observableArrayList(list);
+        tableViewVessel.setItems(obsList);
+        initEditButtons();
+        initRemoveButtons();
+    }
+
+    private void initRemoveButtons() {
+        tableColumnREMOVE.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+        tableColumnREMOVE.setCellFactory(param -> new TableCell<Vessel, Vessel>() {
+            private final Button button = new Button("Remove");
+
+            {
+                button.setOnAction(event -> {
+                    Vessel vessel = getTableView().getItems().get(getIndex());
+                    removeVessel(vessel);
+                });
+            }
+
+            @Override
+            protected void updateItem(Vessel vessel, boolean empty) {
+                super.updateItem(vessel, empty);
+                setGraphic(empty ? null : button);
+            }
+        });
+    }
+
+    private void removeVessel(Vessel vessel) {
+        dbManager.deleteVessel(vessel.getRegistration());
+        updateTableView();
+    }
+
+    private void initEditButtons() {
+        tableColumnEDIT.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+        tableColumnEDIT.setCellFactory(param -> new TableCell<Vessel, Vessel>() {
+            private final Button button = new Button("Edit");
+
+            {
+                button.setOnAction(event -> {
+                    Vessel vessel = getTableView().getItems().get(getIndex());
+                    createDialogForm(vessel, FXML_VESSEL_FORM, Utils.currentStage(event));
+                });
+            }
+
+            @Override
+            protected void updateItem(Vessel vessel, boolean empty) {
+                super.updateItem(vessel, empty);
+                setGraphic(empty ? null : button);
+            }
+        });
+    }
 
     @FXML
     public void onBtNewAction(ActionEvent event) {
-        Stage parentStage = Utils.currentStage(event);
         Vessel obj = new Vessel();
-        createDialogForm(obj, "vesselForm.fxml", parentStage);
-
-
+        createDialogForm(obj, FXML_VESSEL_FORM, Utils.currentStage(event));
     }
 
     private void createDialogForm(Vessel obj, String absName, Stage parentStage) {
@@ -83,92 +157,8 @@ public class VesselController implements Initializable, DataChangeListener {
             dialogStage1.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
-            Alerts.showAlert("IOException", "Error loading view", e.getMessage(), Alert.AlertType.ERROR);
+            Alerts.showAlert(IO_EXCEPTION, ERROR_LOADING_VIEW, e.getMessage(), Alert.AlertType.ERROR);
         }
-    }
-
-
-    public void setVesselService(VesselService vesselService) {
-        this.vesselService = vesselService;
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        initializeNodes();
-        updateTableView();
-
-    }
-
-    private void initializeNodes() {
-        tableColumnRegistration.setCellValueFactory(new PropertyValueFactory<Vessel, String>("registration"));
-        tableColumnNameCapitan.setCellValueFactory(new PropertyValueFactory<Vessel, String>("capitanName"));
-        tableColumnClient.setCellValueFactory(new PropertyValueFactory<Client, String>("name"));
-        tableColumnCountry.setCellValueFactory(new PropertyValueFactory<Country, String>("name"));
-        tableColumnNumPassenger.setCellValueFactory(new PropertyValueFactory<Vessel, Integer>("numPassenger"));
-
-        Stage stage = (Stage) Main.getMainScene().getWindow();
-        tableViewVessel.prefHeightProperty().bind(stage.heightProperty());
-
-    }
-
-    public void updateTableView() {
-        if (vesselService == null) {
-            throw new IllegalStateException("Vessel was null");
-        }
-        List<Vessel> list = vesselService.findAll();
-        obsList = FXCollections.observableArrayList(list);
-        tableViewVessel.setItems(obsList);
-        initEditButtons();
-        initRemoveButtons();
-    }
-
-    private void initRemoveButtons() {
-        tableColumnREMOVE.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
-        tableColumnREMOVE.setCellFactory(param -> new TableCell<Vessel, Vessel>() {
-            private final Button button = new Button("Remove");
-
-            {
-                button.setOnAction(event -> {
-                    Vessel vessel = getTableView().getItems().get(getIndex());
-                    dbManager.deleteVessel(vessel.getRegistration());
-                });
-            }
-
-            @Override
-            protected void updateItem(Vessel vessel, boolean empty) {
-                super.updateItem(vessel, empty);
-                if (empty || vessel == null) {
-                    setGraphic(null);
-                } else {
-                    setGraphic(button);
-                }
-            }
-        });
-    }
-
-
-    private void initEditButtons() {
-        tableColumnEDIT.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
-        tableColumnEDIT.setCellFactory(param -> new TableCell<Vessel, Vessel>() {
-            private final Button button = new Button("Edit");
-
-            {
-                button.setOnAction(event -> {
-                    Vessel vessel = getTableView().getItems().get(getIndex());
-                    createDialogForm(vessel, "vesselForm.fxml", Utils.currentStage(event));
-                });
-            }
-
-            @Override
-            protected void updateItem(Vessel vessel, boolean empty) {
-                super.updateItem(vessel, empty);
-                if (empty || vessel == null) {
-                    setGraphic(null);
-                } else {
-                    setGraphic(button);
-                }
-            }
-        });
     }
 
     @Override
@@ -187,7 +177,7 @@ public class VesselController implements Initializable, DataChangeListener {
     }
 
     private void saveOrUpdateVessel() {
-
         notifyDataChangeListeners();
     }
 }
+

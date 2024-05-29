@@ -10,28 +10,19 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.miguel.marina2.AnchoragesController"
             prefHeight="400.0" prefWidth="600.0">
-
     <children>
-
-        <!-- Estilo da Barra de Menu -->
         <MenuBar layoutY="-2.0" prefHeight="32.0" prefWidth="600.0" style="-fx-background-color: #808080; -fx-text-fill: white;">
             <menus>
-                <Menu mnemonicParsing="false" text="New Client">
-                </Menu>
-                <Menu mnemonicParsing="false" text="Clients">
-                </Menu>
-                <Menu mnemonicParsing="false" text="New Vessel">
-                </Menu>
-                <Menu mnemonicParsing="false" text="Vessels">
-                </Menu>
+                <Menu text="New Client" />
+                <Menu text="Clients" />
+                <Menu text="New Vessel" />
+                <Menu text="Vessels" />
             </menus>
         </MenuBar>
 
-
         <Label layoutX="14.0" layoutY="41.0" style="-fx-font-family: 'System Bold'; -fx-font-size: 18.0;" text="Anchorage: " />
 
-
-        <TableView  fx:id="tableViewAnchorages" layoutY="68.0" prefHeight="329.0" prefWidth="600.0" style="-fx-pref-height: 329.0; -fx-pref-width: 600.0;">
+        <TableView fx:id="tableViewAnchorages" layoutY="68.0" prefHeight="329.0" prefWidth="600.0">
             <columns>
                 <TableColumn fx:id="tableColumnTypeOfPier" prefWidth="150.0" text="Type of Pier" />
                 <TableColumn prefWidth="211.0" />
@@ -40,5 +31,4 @@
             </columns>
         </TableView>
     </children>
-
 </AnchorPane>

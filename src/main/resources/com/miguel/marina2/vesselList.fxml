@@ -7,29 +7,28 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
 <VBox prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.miguel.marina2.VesselController">
-   <children>
-      <Label text="Vessel:">
-         <font>
-            <Font name="System Bold" size="18.0" />
-         </font>
-      </Label>
-      <ToolBar prefHeight="40.0" prefWidth="200.0">
-        <items>
-          <Button fx:id="btNew" mnemonicParsing="false" onAction="#onBtNewAction" text="New" />
-        </items>
-      </ToolBar>
-      <TableView prefHeight="200.0" prefWidth="200.0">
-        <columns>
-          <TableColumn fx:id="tableColumnRegistration" prefWidth="81.0" text="Registration" />
-          <TableColumn fx:id="tableColumnNameCapitan" prefWidth="105.0" text="Capitan" />
-            <TableColumn fx:id="tableColumnClient" prefWidth="96.0" text="Client" />
-            <TableColumn fx:id="tableColumnCountry" prefWidth="86.0" text="Country" />
-            <TableColumn fx:id="tableColumnNumPassenger" prefWidth="109.0" text="Passenger" />
-            <TableColumn fx:id="tableColumnEDIT" prefWidth="61.0" />
-            <TableColumn fx:id="tableColumnREMOVE" prefWidth="61.0" />
-        </columns>
-      </TableView>
-   </children>
+    <children>
+        <Label text="Vessel:">
+            <font>
+                <Font name="System Bold" size="18.0" />
+            </font>
+        </Label>
+        <ToolBar prefHeight="40.0" prefWidth="200.0">
+            <items>
+                <Button fx:id="btNew" mnemonicParsing="false" onAction="#onBtNewAction" text="New" />
+            </items>
+        </ToolBar>
+        <TableView prefHeight="200.0" prefWidth="200.0">
+            <columns>
+                <TableColumn fx:id="tableColumnRegistration" prefWidth="81.0" text="Registration" />
+                <TableColumn fx:id="tableColumnNameCapitan" prefWidth="105.0" text="Capitan" />
+                <TableColumn fx:id="tableColumnClient" prefWidth="96.0" text="Client" />
+                <TableColumn fx:id="tableColumnCountry" prefWidth="86.0" text="Country" />
+                <TableColumn fx:id="tableColumnNumPassenger" prefWidth="109.0" text="Passenger" />
+                <TableColumn fx:id="tableColumnEDIT" prefWidth="61.0" />
+                <TableColumn fx:id="tableColumnREMOVE" prefWidth="61.0" />
+            </columns>
+        </TableView>
+    </children>
 </VBox>

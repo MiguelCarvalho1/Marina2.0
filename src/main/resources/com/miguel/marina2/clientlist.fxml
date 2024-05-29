@@ -9,28 +9,28 @@
 <?import javafx.scene.layout.*?>
 
 <VBox prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.miguel.marina2.ClientController">
-   <children>
-       <Label text="Client List">
-           <padding>
-             <Insets left="5.0" top="5.0" />
-           </padding>
-           <font>
-             <Font name="System Bold" size="18.0" />
-           </font>
-       </Label>
-       <ToolBar prefHeight="40.0" prefWidth="200.0">
-          <items>
-              <Button fx:id="btNew" mnemonicParsing="false" onAction="#onBtNewAction" text="New" />
-          </items>
-       </ToolBar>
-       <TableView fx:id="tableViewClient" prefHeight="324.0" prefWidth="600.0">
-           <columns>
-               <TableColumn fx:id="tableColumnName" prefWidth="103.0" text="Name" />
-               <TableColumn fx:id="tableColumnEmail" prefWidth="197.0" text="Email" />
-               <TableColumn fx:id="tableColumnPhone" prefWidth="164.0" text="Phone" />
-               <TableColumn fx:id="tableColumnEDIT" minWidth="0.0" prefWidth="62.0" />
-               <TableColumn fx:id="tableColumnREMOVE" prefWidth="64.0" />
-           </columns>
-       </TableView>
-   </children>
+    <children>
+        <Label text="Client List">
+            <padding>
+                <Insets left="5.0" top="5.0" />
+            </padding>
+            <font>
+                <Font name="System Bold" size="18.0" />
+            </font>
+        </Label>
+        <ToolBar prefHeight="40.0" prefWidth="200.0">
+            <items>
+                <Button fx:id="btNew" mnemonicParsing="false" onAction="#onBtNewAction" text="New" />
+            </items>
+        </ToolBar>
+        <TableView fx:id="tableViewClient" prefHeight="324.0" prefWidth="600.0">
+            <columns>
+                <TableColumn fx:id="tableColumnName" prefWidth="103.0" text="Name" />
+                <TableColumn fx:id="tableColumnEmail" prefWidth="197.0" text="Email" />
+                <TableColumn fx:id="tableColumnPhone" prefWidth="164.0" text="Phone" />
+                <TableColumn fx:id="tableColumnEDIT" minWidth="0.0" prefWidth="62.0" />
+                <TableColumn fx:id="tableColumnREMOVE" prefWidth="64.0" />
+            </columns>
+        </TableView>
+    </children>
 </VBox>

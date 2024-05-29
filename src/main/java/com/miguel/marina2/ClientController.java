@@ -20,12 +20,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.bson.Document;
-import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
-
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class ClientController implements Initializable, DataChangeListener {
@@ -40,19 +37,13 @@ public class ClientController implements Initializable, DataChangeListener {
     private TableColumn<Client, Integer> tableColumnPhone;
     @FXML
     private TableColumn<Client, Client> tableColumnEDIT;
-
     @FXML
     private TableColumn<Client, Client> tableColumnREMOVE;
-
     @FXML
     private Button btNew;
 
     private ObservableList<Client> obsList;
     private DatabaseManager dbManager = new DatabaseManager();
-
-    public void setTableViewClient(TableView<Client> tableViewClient) {
-        this.tableViewClient = tableViewClient;
-    }
 
     @FXML
     public void onBtNewAction(ActionEvent event) {
@@ -63,60 +54,9 @@ public class ClientController implements Initializable, DataChangeListener {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        updateTableView();
         initializeNodes();
-
-
-
+        updateTableView();
     }
-
-    public void updateTableView() {
-        ObservableList<Client> clientList = FXCollections.observableArrayList();
-
-        MongoCollection<Document> clientCollection = dbManager.getDatabase().getCollection("client");
-        FindIterable<Document> documents = clientCollection.find();
-        MongoCursor<Document> cursor = documents.iterator();
-
-        while (cursor.hasNext()) {
-            Document document = cursor.next();
-            String name = document.getString("name");
-            String email = document.getString("email");
-            Integer phone = document.getInteger("phone");
-            clientList.add(new Client(name, email, phone));
-        }
-
-        tableViewClient.setItems(clientList);
-        tableViewClient.refresh();
-    }
-
-
-
-
-
-
-    private void createDialogForm(Client obj, String absoluteName, Stage parentStage) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
-            AnchorPane pane = loader.load();
-
-            ClientFormController controller = loader.getController(); // Obtenha o controlador
-            controller.setClient(obj);
-            controller.setService(new ClientService());
-            controller.updateFromData();
-
-            Stage dialogStage = new Stage();
-            dialogStage.setTitle("Marina Software");
-            dialogStage.setScene(new Scene(pane));
-            dialogStage.setResizable(false);
-            dialogStage.initOwner(parentStage);
-            dialogStage.initModality(Modality.WINDOW_MODAL);
-            dialogStage.showAndWait();
-        }catch (IOException e){
-            e.printStackTrace();
-            Alerts.showAlert("IOException", "Error loading view", e.getMessage(), Alert.AlertType.ERROR);
-        }
-    }
-
 
     private void initializeNodes() {
         tableColumnName.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -129,10 +69,49 @@ public class ClientController implements Initializable, DataChangeListener {
         initEditButtons();
         initRemoveButtons();
     }
-    @Override
-    public void onDataChanged() {
 
-        updateTableView();
+    public void updateTableView() {
+        ObservableList<Client> clientList = FXCollections.observableArrayList();
+
+        MongoCollection<Document> clientCollection = dbManager.getDatabase().getCollection("client");
+        FindIterable<Document> documents = clientCollection.find();
+        MongoCursor<Document> cursor = documents.iterator();
+
+        while (cursor.hasNext()) {
+            Document document = cursor.next();
+            Integer id = document.getInteger("id");
+            String name = document.getString("name");
+            String email = document.getString("email");
+            Integer phone = document.getInteger("phone");
+            clientList.add(new Client(id, name, email, phone));
+        }
+
+        obsList = FXCollections.observableArrayList(clientList);
+        tableViewClient.setItems(obsList);
+        tableViewClient.refresh();
+    }
+
+    private void createDialogForm(Client obj, String absoluteName, Stage parentStage) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
+            AnchorPane pane = loader.load();
+
+            ClientFormController controller = loader.getController();
+            controller.setClient(obj);
+            controller.setService(new ClientService());
+            controller.subscribeDataChangeListener(this);
+            controller.updateFormData();
+
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Marina Software");
+            dialogStage.setScene(new Scene(pane));
+            dialogStage.setResizable(false);
+            dialogStage.initOwner(parentStage);
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.showAndWait();
+        } catch (IOException e) {
+            Alerts.showAlert("IOException", "Error loading view", e.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 
     private void initEditButtons() {
@@ -143,7 +122,7 @@ public class ClientController implements Initializable, DataChangeListener {
             {
                 button.setOnAction(event -> {
                     Client client = getTableView().getItems().get(getIndex());
-                    dbManager.updateClient(client, (Stage) button.getScene().getWindow());
+                    createDialogForm(client, "clientForm.fxml", Utils.currentStage(event));
                 });
             }
 
@@ -168,6 +147,7 @@ public class ClientController implements Initializable, DataChangeListener {
                 button.setOnAction(event -> {
                     Client client = getTableView().getItems().get(getIndex());
                     dbManager.deleteClient(client.getId());
+                    ClientController.this.updateTableView();
                 });
             }
 
@@ -182,4 +162,10 @@ public class ClientController implements Initializable, DataChangeListener {
             }
         });
     }
+
+    @Override
+    public void onDataChanged() {
+        updateTableView();
+    }
 }
+

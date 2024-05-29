@@ -1,8 +1,8 @@
 package com.miguel.marina2;
 
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
@@ -84,6 +84,7 @@ public class Anchorages implements Serializable {
 
     @Override
     public String toString() {
-        return "Anchorages: " + pierType + '-' + + length + "m" ;
+        return "Anchorages: " + pierType + '-' + + length + "m";
     }
 }
+

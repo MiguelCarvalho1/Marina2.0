@@ -17,9 +17,11 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.function.Function;
 
 public class VesselFormController implements Initializable {
 
+    private static final String FIELD_EMPTY_ERROR = "Field can't be empty";
     private Vessel entity;
     private DatabaseManager dbManager;
     private VesselService service;
@@ -91,7 +93,6 @@ public class VesselFormController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        this.dbManager = new DatabaseManager();
         initializeNodes();
     }
 
@@ -122,20 +123,23 @@ public class VesselFormController implements Initializable {
         Vessel obj = new Vessel();
         ValidationException exception = new ValidationException("Validation error");
 
-        if (txtRegistration.getText() == null || txtRegistration.getText().trim().isEmpty()) {
-            exception.addError("registration", "Field can't be empty");
+        if (isFieldEmpty(txtRegistration)) {
+            exception.addError("registration", FIELD_EMPTY_ERROR);
+        } else {
+            obj.setRegistration(txtRegistration.getText());
         }
-        obj.setRegistration(txtRegistration.getText());
 
-        if (txtCapitanName.getText() == null || txtCapitanName.getText().trim().isEmpty()) {
-            exception.addError("capitanName", "Field can't be empty");
+        if (isFieldEmpty(txtCapitanName)) {
+            exception.addError("capitanName", FIELD_EMPTY_ERROR);
+        } else {
+            obj.setCapitanName(txtCapitanName.getText());
         }
-        obj.setCapitanName(txtCapitanName.getText());
 
-        if (txtNumPassenger.getText() == null || txtNumPassenger.getText().trim().isEmpty()) {
-            exception.addError("numPassenger", "Field can't be empty");
+        if (isFieldEmpty(txtNumPassenger)) {
+            exception.addError("numPassenger", FIELD_EMPTY_ERROR);
+        } else {
+            obj.setNumPassenger(Utils.tryParseToInt(txtNumPassenger.getText()));
         }
-        obj.setNumPassenger(Utils.tryParseToInt(txtNumPassenger.getText()));
 
         if (comboBoxClient.getValue() == null) {
             exception.addError("client", "Please select a client");
@@ -176,6 +180,10 @@ public class VesselFormController implements Initializable {
         return obj;
     }
 
+    private boolean isFieldEmpty(TextField textField) {
+        return textField.getText() == null || textField.getText().trim().isEmpty();
+    }
+
     @FXML
     public void onBtCancelAction(ActionEvent event) {
         Utils.currentStage(event).close();
@@ -188,9 +196,9 @@ public class VesselFormController implements Initializable {
         Utils.formatDatePicker(entryDate, "dd/MM/yyyy");
         Utils.formatDatePicker(exitDate, "dd/MM/yyyy");
 
-        initializeComboBoxClient();
-        initializeComboBoxCountry();
-        initializeComboBoxAnchorages();
+        initializeComboBox(comboBoxClient, Client::getName);
+        initializeComboBox(comboBoxCountry, Country::getName);
+        initializeComboBox(comboBoxAnchorages, anchorage -> String.valueOf(anchorage.getPierType()));
     }
 
     public void updateFormData() {
@@ -201,23 +209,9 @@ public class VesselFormController implements Initializable {
         txtCapitanName.setText(entity.getCapitanName());
         txtNumPassenger.setText(String.valueOf(entity.getNumPassenger()));
 
-        if (entity.getClientId() == null) {
-            comboBoxClient.getSelectionModel().selectFirst();
-        } else {
-            comboBoxClient.setValue(entity.getClientId());
-        }
-
-        if (entity.getCountryId() == null) {
-            comboBoxCountry.getSelectionModel().selectFirst();
-        } else {
-            comboBoxCountry.setValue(entity.getCountryId());
-        }
-
-        if (entity.getPierType() == null) {
-            comboBoxAnchorages.getSelectionModel().selectFirst();
-        } else {
-            comboBoxAnchorages.setValue(entity.getPierType());
-        }
+        comboBoxClient.setValue(entity.getClientId() == null ? null : entity.getClientId());
+        comboBoxCountry.setValue(entity.getCountryId() == null ? null : entity.getCountryId());
+        comboBoxAnchorages.setValue(entity.getPierType() == null ? null : entity.getPierType());
 
         if (entity.getEntryDate() != null) {
             entryDate.setValue(LocalDate.ofInstant(entity.getEntryDate().toInstant(), ZoneId.systemDefault()));
@@ -229,113 +223,44 @@ public class VesselFormController implements Initializable {
     }
 
     public void loadAssociateObjects() {
-        if (clientService == null) {
-            throw new IllegalStateException("ClientService was null");
+        if (clientService == null || countryService == null || anchoragesService == null) {
+            throw new IllegalStateException("Services cannot be null");
         }
-        List<Client> list = clientService.findAll();
-        obsListClient = FXCollections.observableArrayList(list);
+        obsListClient = FXCollections.observableArrayList(clientService.findAll());
+        obsListCountry = FXCollections.observableArrayList(countryService.findAll());
+        obsListAnchorages = FXCollections.observableArrayList(anchoragesService.findAll());
+
         comboBoxClient.setItems(obsListClient);
-
-        if (countryService == null) {
-            throw new IllegalStateException("CountryService was null");
-        }
-        List<Country> listC = countryService.findAll();
-        obsListCountry = FXCollections.observableArrayList(listC);
         comboBoxCountry.setItems(obsListCountry);
-
-        if (anchoragesService == null) {
-            throw new IllegalStateException("AnchoragesService was null");
-        }
-        List<Anchorages> listA = anchoragesService.findAll();
-        obsListAnchorages = FXCollections.observableArrayList(listA);
         comboBoxAnchorages.setItems(obsListAnchorages);
     }
 
     public void setErrorMessages(Map<String, String> errors) {
-        Set<String> fields = errors.keySet();
-
-        labelErrorRegistration.setText(fields.contains("registration") ? errors.get("registration") : "");
-        labelErrorCapitanName.setText(fields.contains("capitanName") ? errors.get("capitanName") : "");
-        labelErrorNumPassenger.setText(fields.contains("numPassenger") ? errors.get("numPassenger") : "");
-        labelErrorClient.setText(fields.contains("client") ? errors.get("client") : "");
-        labelErrorCountry.setText(fields.contains("country") ? errors.get("country") : "");
-        labelErrorAnchorages.setText(fields.contains("anchorage") ? errors.get("anchorage") : "");
-        labelErrorEntryDate.setText(fields.contains("entryDate") ? errors.get("entryDate") : "");
-        labelErrorExitDate.setText(fields.contains("exitDate") ? errors.get("exitDate") : "");
+        labelErrorRegistration.setText(errors.getOrDefault("registration", ""));
+        labelErrorCapitanName.setText(errors.getOrDefault("capitanName", ""));
+        labelErrorNumPassenger.setText(errors.getOrDefault("numPassenger", ""));
+        labelErrorClient.setText(errors.getOrDefault("client", ""));
+        labelErrorCountry.setText(errors.getOrDefault("country", ""));
+        labelErrorAnchorages.setText(errors.getOrDefault("anchorage", ""));
+        labelErrorEntryDate.setText(errors.getOrDefault("entryDate", ""));
+        labelErrorExitDate.setText(errors.getOrDefault("exitDate", ""));
     }
 
-    private void initializeComboBoxClient() {
-        comboBoxClient.setCellFactory(param -> new ListCell<Client>() {
+    private <T> void initializeComboBox(ComboBox<T> comboBox, Function<T, String> toStringFunction) {
+        comboBox.setCellFactory(param -> new ListCell<T>() {
             @Override
-            protected void updateItem(Client item, boolean empty) {
+            protected void updateItem(T item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item.getName());
-                }
+                setText(empty || item == null ? null : toStringFunction.apply(item));
             }
         });
-        comboBoxClient.setButtonCell(new ListCell<Client>() {
+        comboBox.setButtonCell(new ListCell<T>() {
             @Override
-            protected void updateItem(Client item, boolean empty) {
+            protected void updateItem(T item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item.getName());
-                }
-            }
-        });
-    }
-
-    private void initializeComboBoxCountry() {
-        comboBoxCountry.setCellFactory(param -> new ListCell<Country>() {
-            @Override
-            protected void updateItem(Country item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item.getName());
-                }
-            }
-        });
-        comboBoxCountry.setButtonCell(new ListCell<Country>() {
-            @Override
-            protected void updateItem(Country item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item.getName());
-                }
-            }
-        });
-    }
-
-    private void initializeComboBoxAnchorages() {
-        comboBoxAnchorages.setCellFactory(param -> new ListCell<Anchorages>() {
-            @Override
-            protected void updateItem(Anchorages item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(String.valueOf(item.getPierType()));
-                }
-            }
-        });
-        comboBoxAnchorages.setButtonCell(new ListCell<Anchorages>() {
-            @Override
-            protected void updateItem(Anchorages item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(String.valueOf(item.getPierType()));
-                }
+                setText(empty || item == null ? null : toStringFunction.apply(item));
             }
         });
     }
 }
+

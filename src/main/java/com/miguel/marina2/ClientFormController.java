@@ -153,4 +153,10 @@ public class ClientFormController implements Initializable {
         labelErrorEmail.setText(fields.contains("email") ? errors.get("email") : "" );
         labelErrorPhone.setText(fields.contains("phone") ? errors.get("phone") : "");
     }
+
+    public void updateFormData() {
+    }
+
+    public void subscribeDataChangeListener(ClientController clientController) {
+    }
 }

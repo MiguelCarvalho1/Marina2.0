@@ -12,6 +12,7 @@ module com.miguel.marina2 {
     requires spring.boot.autoconfigure;
     requires org.apache.logging.log4j;
     requires org.mongodb.driver.core;
+    requires spring.tx;
 
     opens com.miguel.marina2 to javafx.fxml;
     exports com.miguel.marina2;

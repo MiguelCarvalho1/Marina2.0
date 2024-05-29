@@ -8,47 +8,58 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
 public class LoginController {
 
-    public Button loginButton;
+    @FXML
+    private Button loginButton;
     @FXML
     private Button cancelButton;
     @FXML
-    private Label LoginMessageLabel;
+    private Label loginMessageLabel;
     @FXML
     private TextField usernameTextField;
     @FXML
     private PasswordField passwordField;
 
-    public void loginButtonOnAction(){
-        if(!usernameTextField.getText().isBlank() && !passwordField.getText().isBlank()){
-            validateLogin(usernameTextField.getText(), passwordField.getText());
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("admin.fxml"));
-                AnchorPane root = loader.load();
-                Stage stage = new Stage();
-                stage.setScene(new Scene(root));
-                stage.show();
+    private DatabaseManager dbManager = new DatabaseManager();
 
-            }catch (IOException e){
-                e.printStackTrace();
+    @FXML
+    public void loginButtonOnAction() {
+        if (!usernameTextField.getText().isBlank() && !passwordField.getText().isBlank()) {
+            if (validateLogin(usernameTextField.getText(), passwordField.getText())) {
+                loadAdminScene();
+            } else {
+                loginMessageLabel.setText("Invalid login credentials!");
             }
-
-        }else {
-            LoginMessageLabel.setText("Por favor, insira o username e a password!");
+        } else {
+            loginMessageLabel.setText("Please enter username and password!");
         }
     }
 
+    @FXML
     public void cancelButtonOnAction() {
         Stage stage = (Stage) cancelButton.getScene().getWindow();
         stage.close();
     }
 
-    private void validateLogin(String text, String text1) {
+    private boolean validateLogin(String username, String password) {
+        // Implement actual validation logic here, possibly querying the database
+        return dbManager.validateAdminCredentials(username, password);
+    }
+
+    private void loadAdminScene() {
+         try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("admin.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
