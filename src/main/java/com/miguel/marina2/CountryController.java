@@ -125,6 +125,8 @@ public class CountryController implements Initializable {
     }
 
 
-
-
+    @FXML
+    public void onBtCancelAction(ActionEvent event) {
+        Utils.currentStage(event).close();
+    }
 }
