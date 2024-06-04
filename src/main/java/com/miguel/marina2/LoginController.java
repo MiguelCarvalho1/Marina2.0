@@ -8,11 +8,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
 public class LoginController {
+
+    private static Scene mainScene;
 
     @FXML
     private Button loginButton;
@@ -47,19 +50,25 @@ public class LoginController {
     }
 
     private boolean validateLogin(String username, String password) {
-        // Implement actual validation logic here, possibly querying the database
+
         return dbManager.validateAdminCredentials(username, password);
     }
 
     private void loadAdminScene() {
-         try {
+        try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("admin.fxml"));
-            Parent root = loader.load();
+            AnchorPane root = loader.load();
+            mainScene = new Scene(root);
             Stage stage = new Stage();
-            stage.setScene(new Scene(root));
+            stage.setScene(mainScene);
+            stage.setTitle("Marina Software");
             stage.show();
+            Stage currentStage = (Stage) loginButton.getScene().getWindow();
+            currentStage.close();
         } catch (IOException e) {
             e.printStackTrace();
+            loginMessageLabel.setText("Falha ao carregar a cena do administrador!");
         }
     }
-}
+    }
+

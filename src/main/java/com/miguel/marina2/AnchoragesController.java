@@ -1,6 +1,5 @@
 package com.miguel.marina2;
 
-import com.miguel.marina2.utils.Constraints;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -10,6 +9,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -40,9 +40,13 @@ public class AnchoragesController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        tableColumnTypeOfPier.setCellValueFactory(new PropertyValueFactory<>("pierType"));
-        tableColumnCapacity.setCellValueFactory(new PropertyValueFactory<>("places"));
-        updateListAnchorages();
+        if (tableColumnTypeOfPier != null && tableColumnCapacity != null) {
+            tableColumnTypeOfPier.setCellValueFactory(new PropertyValueFactory<>("pierType"));
+            tableColumnCapacity.setCellValueFactory(new PropertyValueFactory<>("places"));
+            updateListAnchorages();
+        } else {
+            System.err.println("Table columns are not properly initialized.");
+        }
     }
 
     private void updateListAnchorages() {
