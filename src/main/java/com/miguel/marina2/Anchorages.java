@@ -1,8 +1,8 @@
 package com.miguel.marina2;
 
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
@@ -28,6 +28,12 @@ public class Anchorages implements Serializable {
         this.price = price;
         this.places = places;
     }
+
+    public Anchorages(Character pierType, Integer places) {
+        this.pierType = pierType;
+        this.places = places;
+    }
+
 
     public Integer getId() {
         return id;
@@ -84,7 +90,6 @@ public class Anchorages implements Serializable {
 
     @Override
     public String toString() {
-        return "Anchorages: " + pierType + '-' + + length + "m";
+        return "Anchorages: " + pierType + '-' + + length + "m" ;
     }
 }
-
